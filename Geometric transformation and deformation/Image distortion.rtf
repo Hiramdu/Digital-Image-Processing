@@ -1,0 +1,61 @@
+{\rtf1\ansi\ansicpg936\cocoartf1504\cocoasubrtf820
+{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;\f1\fnil\fcharset134 PingFangSC-Regular;}
+{\colortbl;\red255\green255\blue255;\red100\green56\blue32;\red196\green26\blue22;\red170\green13\blue145;
+\red0\green0\blue0;\red92\green38\blue153;\red46\green13\blue110;\red28\green0\blue207;}
+{\*\expandedcolortbl;;\csgenericrgb\c39100\c22000\c12500;\csgenericrgb\c77000\c10200\c8600;\csgenericrgb\c66500\c5200\c56900;
+\csgenericrgb\c0\c0\c0;\csgenericrgb\c35900\c14900\c60100;\csgenericrgb\c18100\c5200\c43100;\csgenericrgb\c11000\c0\c81000;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\deftab543
+\pard\tx543\pardeftab543\pardirnatural\partightenfactor0
+
+\f0\fs22 \cf2 \CocoaLigature0 #include\cf3 <iostream>\cf2 \
+#include\cf3 <opencv2/core/core.hpp>\cf2 \
+#include\cf3 <opencv2/highgui/highgui.hpp>\cf2 \
+\cf4 using\cf5  \cf4 namespace\cf5  \cf6 cv\cf5 ;\
+\cf4 using\cf5  \cf4 namespace\cf5  \cf6 std\cf5 ;\
+\
+\cf4 int\cf5  main(\cf4 int\cf5  argc, \cf4 char\cf5 ** argv) \{\
+    \cf6 Mat\cf5  input=\cf7 imread\cf5 (\cf3 "/Users/apple/Downloads/a.png"\cf5 );\
+    \cf4 if\cf5 (input.\cf7 empty\cf5 ())\
+    \{\
+        \cf6 cout\cf5 <<\cf3 "cannot open"\cf5 <<\cf7 endl\cf5 ;\
+    \}\
+    \cf4 else\cf5 \{\
+        \cf6 Mat\cf5  output(input.\cf6 rows\cf5 ,input.\cf6 cols\cf5 ,\cf2 CV_8UC3\cf5 );\
+        \cf4 for\cf5 (\cf4 int\cf5  i=\cf8 0\cf5 ;i<output.\cf6 rows\cf5 ;i++)\{\
+            \cf4 for\cf5 (\cf4 int\cf5  j=\cf8 0\cf5 ;j<output.\cf6 cols\cf5 ;j++)\{\
+                \cf6 Vec3b\cf5  outputP = output.\cf7 at\cf5 <\cf6 Vec3b\cf5 >(i, j);\
+                \
+                \cf4 double\cf5  x = ((\cf4 double\cf5 )j - \cf8 0.5\cf5 *output.\cf6 cols\cf5 ) / (\cf8 0.5\cf5 *output.\cf6 cols\cf5 );\
+                \cf4 double\cf5  y = ((\cf4 double\cf5 )i - \cf8 0.5\cf5 *output.\cf6 rows\cf5 ) / (\cf8 0.5\cf5 *output.\cf6 rows\cf5 );\
+                \
+                \cf4 double\cf5  r=\cf7 sqrt\cf5 (\cf7 pow\cf5 (x,\cf8 2\cf5 )+\cf7 pow\cf5 (y,\cf8 2\cf5 ));\
+                \cf4 double\cf5  o=\cf7 pow\cf5 (\cf8 1\cf5 -r,\cf8 2\cf5 );\
+                \
+                \cf4 if\cf5 (r>=\cf8 1\cf5 )\{\
+                    outputP=input.\cf7 at\cf5 <\cf6 Vec3b\cf5 >(i, j);\
+                \}\
+                \cf4 else\cf5 \{\
+                    \cf4 double\cf5  ix = (\cf7 cos\cf5 (o)*x - \cf7 sin\cf5 (o)*y)*\cf8 0.5\cf5 *output.\cf6 cols\cf5 +\cf8 0.5\cf5 *output.\cf6 cols\cf5 ;\
+                    \cf4 double\cf5  iy = (\cf7 sin\cf5 (o)*x + \cf7 cos\cf5 (o)*y)*\cf8 0.5\cf5 *output.\cf6 rows\cf5 +\cf8 0.5\cf5 *output.\cf6 rows\cf5 ;\
+                    \cf4 if\cf5  (ix < input.\cf6 cols\cf5 &&iy < input.\cf6 rows\cf5 )\{\
+                        outputP=input.\cf7 at\cf5 <\cf6 Vec3b\cf5 >(iy,ix);\
+                    \}\
+                    \cf4 else\cf5 \{\
+                        outputP=input.\cf7 at\cf5 <\cf6 Vec3b\cf5 >(input.\cf6 rows\cf5 -\cf8 1\cf5 ,input.\cf6 cols\cf5 -\cf8 1\cf5 );\
+                    \}\
+                \}\
+                output.\cf7 at\cf5 <\cf6 Vec3b\cf5 >(i,j)=outputP;\
+            \}\
+        \
+        \}\
+        \cf7 namedWindow\cf5 (\cf3 "
+\f1 \'cd\'bc\'cf\'f1\'b1\'e4\'d0\'ce
+\f0 "\cf5 ,\cf7 WINDOW_AUTOSIZE\cf5 );\
+        \cf7 imshow\cf5 (\cf3 "
+\f1 \'b1\'e4\'d0\'ce\'cd\'bc\'cf\'f1
+\f0 "\cf5 ,output);\
+        \cf7 waitKey\cf5 ();\
+    \}\
+    \cf4 return\cf5  \cf8 0\cf5 ;\
+\}}
